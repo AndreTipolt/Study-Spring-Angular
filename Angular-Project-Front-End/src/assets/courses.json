@@ -1,0 +1,22 @@
+[
+    {
+        "_id": "1",
+        "name": "Curso de Java",
+        "category": "Back-End"
+    },
+    {
+        "_id": "2",
+        "name": "Curso de PHP",
+        "category": "Back-End"
+    },
+    {
+        "_id": "3",
+        "name": "Curso de Python",
+        "category": "Back-End"
+    },
+    {
+        "_id": "4",
+        "name": "Curso de TypeScript",
+        "category": "Back-End"
+    }
+]
