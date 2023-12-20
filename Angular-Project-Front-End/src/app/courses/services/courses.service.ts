@@ -25,4 +25,10 @@ export class CoursesService {
     
     return this.httpClient.post<Course>(this.API, record).pipe(first());
   }
+
+  findById(id: string){
+    const newUrl = `${this.API}/${id}`;
+
+    return this.httpClient.get<Course>(newUrl)
+  }
 }
