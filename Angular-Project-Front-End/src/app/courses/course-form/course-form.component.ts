@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoursesService } from '../services/courses.service';
 import { ActivatedRoute } from '@angular/router';
@@ -16,8 +16,8 @@ export class CourseFormComponent implements OnInit {
   form: FormGroup = this.formBuilder.group({
 
     _id: new FormControl<string | null>(''),
-    name: new FormControl<string | null>('', { nonNullable: true }),
-    category: new FormControl<string | null>('', { nonNullable: true }),
+    name: new FormControl<string | null>('', [ Validators.minLength(4), Validators.maxLength(100), Validators.required ]),
+    category: new FormControl<string | null>('',[ Validators.required ]),
   });
 
   constructor(private formBuilder: NonNullableFormBuilder,
@@ -54,5 +54,24 @@ export class CourseFormComponent implements OnInit {
 
   private onError() {
     this._snackBar.open('Erro ao adicionar curso', '', { duration: 2000 })
+  }
+
+  getErrorMessage(fieldName: string){
+
+    const field = this.form.get(fieldName);
+
+    if(field?.hasError('required')){
+      return 'Campo Obrigatório'
+    }
+    if(field?.hasError('minlength')){
+      const charsConunt = field.errors ? field.errors['minlength']['requiredLength'] : 5;
+      return 'Tamanho minimo é de ' + charsConunt + ' caracteres'
+    }
+    if(field?.hasError('maxlength')){
+      const charsConunt = field.errors ? field.errors['maxlength']['requiredLength'] : 10;
+      return 'Tamanho minimo é de ' + charsConunt + ' caracteres'
+    }
+
+    return 'Erro'
   }
 }

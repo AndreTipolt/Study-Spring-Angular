@@ -4,17 +4,20 @@
         <mat-card-content>
             <mat-toolbar>Inserir Curso</mat-toolbar>
             <mat-form-field class="full-width">
-                <input matInput placeholder="Nome" formControlName="name">
+                <input matInput placeholder="Nome" formControlName="name" #name>
+                <mat-hint align="end">{{name.value?.length || 0}}/100</mat-hint>
+                <mat-error *ngIf="form.get('name')?.invalid">{{ getErrorMessage('name') }}</mat-error>
             </mat-form-field>
 
 
             <mat-form-field class="full-width">
                 <mat-label>Categorias</mat-label>
                 <mat-select formControlName="category">
-                    <mat-option value="null"></mat-option>
+                    <mat-option value="null" disabled></mat-option>
                     <mat-option value="Front-End">Front-End</mat-option>
                     <mat-option value="Back-End">Back-End</mat-option>
-                  </mat-select>
+                </mat-select>
+                <mat-error *ngIf="form.get('name')?.invalid">{{ getErrorMessage('name') }}</mat-error>
             </mat-form-field>
         </mat-card-content>
     </form>
