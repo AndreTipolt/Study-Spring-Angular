@@ -44,6 +44,12 @@ export class CoursesService {
   private update(course: Course){
     const newUrl = `${this.API}/${course._id}`;
 
-    return this.httpClient.put<Course>(newUrl, course)
+    return this.httpClient.put<Course>(newUrl, course);
+  }
+
+  delete(id: string){
+    const newUrl = `${this.API}/${id}`;
+
+    return this.httpClient.delete(newUrl);
   }
 }

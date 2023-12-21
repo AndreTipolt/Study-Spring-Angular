@@ -3,7 +3,7 @@
     <mat-toolbar color="secondary">Cursos Disponíveis</mat-toolbar>
 
     <div class="column-flex mat-elevation-z8">
-        <app-course-list *ngIf="courses$ | async as courses; else loading" [courses]="courses" (add)="onAdd()" (edit)="onEdit($event)"></app-course-list>
+        <app-course-list *ngIf="courses$ | async as courses; else loading" [courses]="courses" (add)="onAdd()" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-course-list>
 
         <div *ngIf="courses$ | async as courses; else loading">
             

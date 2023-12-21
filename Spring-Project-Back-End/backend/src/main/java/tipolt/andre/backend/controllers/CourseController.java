@@ -1,9 +1,12 @@
 package tipolt.andre.backend.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,11 +53,21 @@ public class CourseController {
             recordFound.setCategory(courseModel.getCategory());
             recordFound.setName(courseModel.getName());
 
-            CourseModel updated =  courseRepository.save(recordFound);
+            CourseModel updated = courseRepository.save(recordFound);
 
             return ResponseEntity.ok().body(updated);
-            
+
         })
-        .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping(value="/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+
+        CourseModel objectToWillBeRemoved = courseRepository.findById(id).orElseThrow(() -> new RuntimeException());
+
+        courseRepository.deleteById(objectToWillBeRemoved.getId());
+
+        return ResponseEntity.noContent().build();
     }
 }
