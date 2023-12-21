@@ -5,13 +5,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import tipolt.andre.backend.exceptions.ResourceNotFoundException;
 import tipolt.andre.backend.models.CourseModel;
 import tipolt.andre.backend.repositories.CourseRepository;
 
 @Service
 @AllArgsConstructor
 public class CourseService {
-    
+
     private final CourseRepository courseRepository;
 
     public List<CourseModel> list() {
@@ -25,25 +26,26 @@ public class CourseService {
 
     public CourseModel findById(Long id) {
 
-        return courseRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        return courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public CourseModel update(Long id,CourseModel courseModel) {
+    public CourseModel update(Long id, CourseModel courseModel) {
 
-
-        CourseModel objectThatWillBeUpdated = courseRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        CourseModel objectThatWillBeUpdated = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
         objectThatWillBeUpdated.setCategory(courseModel.getCategory());
         objectThatWillBeUpdated.setName(courseModel.getName());
 
         CourseModel updated = courseRepository.save(objectThatWillBeUpdated);
-        
+
         return updated;
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
 
-        CourseModel objectToWillBeRemoved = courseRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        CourseModel objectToWillBeRemoved = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
         courseRepository.deleteById(objectToWillBeRemoved.getId());
 

@@ -62,7 +62,7 @@ public class CourseController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id) {
 
-         courseService.delete(id);
+        courseService.delete(id);
 
         return ResponseEntity.noContent().build();
     }
