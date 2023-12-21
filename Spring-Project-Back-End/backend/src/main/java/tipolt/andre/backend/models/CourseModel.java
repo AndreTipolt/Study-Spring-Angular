@@ -1,5 +1,7 @@
 package tipolt.andre.backend.models;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -8,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Entity
@@ -21,8 +25,13 @@ public class CourseModel {
     private Long id;
 
     @Column(length = 255, nullable = false)
+    @NotNull
+    @Length(min = 5, max = 100)
     private String name;
 
     @Column(length = 10, nullable = false)
+    @NotNull
+    @Length(max = 10)
+    @Pattern(regexp = "Back-End|Front-End")
     private String category;
 }
