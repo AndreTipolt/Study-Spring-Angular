@@ -1,9 +1,7 @@
 package tipolt.andre.backend.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import tipolt.andre.backend.models.CourseModel;
-import tipolt.andre.backend.repositories.CourseRepository;
+import tipolt.andre.backend.services.CourseService;
 
 @Validated
 @RestController
@@ -30,48 +28,41 @@ import tipolt.andre.backend.repositories.CourseRepository;
 @AllArgsConstructor // Ta fazendo a injeção de dependência do courseRepository
 public class CourseController {
 
-    private final CourseRepository courseRepository;
+    private final CourseService courseService;
 
     @GetMapping
-    public List<CourseModel> list() {
-        return courseRepository.findAll();
+    public ResponseEntity<List<CourseModel>> list() {
+        return ResponseEntity.ok().body(courseService.list());
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CourseModel create(@RequestBody @Valid CourseModel course) {
+    public ResponseEntity<CourseModel> create(@RequestBody @Valid CourseModel course) {
 
-        return courseRepository.save(course);
+        return ResponseEntity.status(201).body(courseService.create(course));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CourseModel> findById(@PathVariable @NotNull @Positive Long id) {
 
-        return courseRepository.findById(id).map((record) -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.notFound().build());
+        CourseModel course = courseService.findById(id);
+
+        return ResponseEntity.ok().body(course);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CourseModel> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid CourseModel courseModel) {
+    public ResponseEntity<CourseModel> update(@PathVariable @NotNull @Positive Long id,
+            @RequestBody @Valid CourseModel courseModel) {
 
-        return courseRepository.findById(id).map((recordFound) -> {
-            recordFound.setCategory(courseModel.getCategory());
-            recordFound.setName(courseModel.getName());
+        CourseModel course = courseService.update(id, courseModel);
 
-            CourseModel updated = courseRepository.save(recordFound);
-
-            return ResponseEntity.ok().body(updated);
-
-        })
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok().body(course);
     }
 
-    @DeleteMapping(value="/{id}")
-    public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id){
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id) {
 
-        CourseModel objectToWillBeRemoved = courseRepository.findById(id).orElseThrow(() -> new RuntimeException());
-
-        courseRepository.deleteById(objectToWillBeRemoved.getId());
+         courseService.delete(id);
 
         return ResponseEntity.noContent().build();
     }
