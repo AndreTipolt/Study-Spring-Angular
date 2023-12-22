@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
-import tipolt.andre.backend.models.CourseModel;
+import tipolt.andre.backend.dtos.CourseDTO;
 import tipolt.andre.backend.services.CourseService;
 
 @Validated
@@ -31,30 +31,30 @@ public class CourseController {
     private final CourseService courseService;
 
     @GetMapping
-    public ResponseEntity<List<CourseModel>> list() {
+    public ResponseEntity<List<CourseDTO>> list() {
         return ResponseEntity.ok().body(courseService.list());
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<CourseModel> create(@RequestBody @Valid CourseModel course) {
+    public ResponseEntity<CourseDTO> create(@RequestBody @Valid CourseDTO course) {
 
         return ResponseEntity.status(201).body(courseService.create(course));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CourseModel> findById(@PathVariable @NotNull @Positive Long id) {
+    public ResponseEntity<CourseDTO> findById(@PathVariable @NotNull @Positive Long id) {
 
-        CourseModel course = courseService.findById(id);
+        CourseDTO course = courseService.findById(id);
 
         return ResponseEntity.ok().body(course);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CourseModel> update(@PathVariable @NotNull @Positive Long id,
-            @RequestBody @Valid CourseModel courseModel) {
+    public ResponseEntity<CourseDTO> update(@PathVariable @NotNull @Positive Long id,
+            @RequestBody @Valid CourseDTO courseModel) {
 
-        CourseModel course = courseService.update(id, courseModel);
+        CourseDTO course = courseService.update(id, courseModel);
 
         return ResponseEntity.ok().body(course);
     }

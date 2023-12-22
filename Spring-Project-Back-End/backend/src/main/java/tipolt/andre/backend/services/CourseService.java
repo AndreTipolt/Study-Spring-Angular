@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import tipolt.andre.backend.dtos.CourseDTO;
+import tipolt.andre.backend.dtos.mapper.CourseMapper;
 import tipolt.andre.backend.exceptions.ResourceNotFoundException;
 import tipolt.andre.backend.models.CourseModel;
 import tipolt.andre.backend.repositories.CourseRepository;
@@ -15,31 +17,38 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
 
-    public List<CourseModel> list() {
-        return courseRepository.findAll();
+    private CourseMapper courseMapper;
+
+    public List<CourseDTO> list() {
+        return courseRepository.findAll().stream().map((course) -> courseMapper.toDTO(course)).toList();
     }
 
-    public CourseModel create(CourseModel course) {
+    public CourseDTO create(CourseDTO course) {
 
-        return courseRepository.save(course);
+        CourseModel courseModel = courseMapper.toCourseModel(course);
+
+        courseRepository.save(courseModel);
+        return course;
     }
 
-    public CourseModel findById(Long id) {
+    public CourseDTO findById(Long id) {
 
-        return courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        CourseModel course =  courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+
+        return courseMapper.toDTO(course);
     }
 
-    public CourseModel update(Long id, CourseModel courseModel) {
+    public CourseDTO update(Long id, CourseDTO courseModel) {
 
         CourseModel objectThatWillBeUpdated = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        objectThatWillBeUpdated.setCategory(courseModel.getCategory());
-        objectThatWillBeUpdated.setName(courseModel.getName());
+        objectThatWillBeUpdated.setCategory(courseMapper.convertCategoryValue(courseModel.category()));
+        objectThatWillBeUpdated.setName(courseModel.name());
 
-        CourseModel updated = courseRepository.save(objectThatWillBeUpdated);
+        courseRepository.save(objectThatWillBeUpdated);
 
-        return updated;
+        return courseModel;
     }
 
     public void delete(Long id) {

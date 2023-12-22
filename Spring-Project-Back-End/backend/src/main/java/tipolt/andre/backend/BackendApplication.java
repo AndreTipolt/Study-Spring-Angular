@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import tipolt.andre.backend.models.CourseModel;
+import tipolt.andre.backend.models.enums.CategoryEnum;
 import tipolt.andre.backend.repositories.CourseRepository;
 
 @SpringBootApplication
@@ -25,7 +26,7 @@ public class BackendApplication {
 			CourseModel newCourse = new CourseModel();
 
 			newCourse.setName("Curso de Java");
-			newCourse.setCategory("Back-End");
+			newCourse.setCategory(CategoryEnum.BACK_END);
 
 			courseRepository.save(newCourse);
         };
